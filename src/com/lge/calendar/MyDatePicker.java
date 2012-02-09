@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Parcel;
@@ -19,10 +20,14 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.NumberPicker.OnValueChangeListener;
 
 /*
@@ -31,7 +36,7 @@ import android.widget.NumberPicker.OnValueChangeListener;
  * - start/end range
  * -  accessibility
  */
-public class MyDatePicker extends FrameLayout {
+public class MyDatePicker extends FrameLayout implements OnCheckedChangeListener {
 
     private static final String LOG_TAG = DatePicker.class.getSimpleName();
 
@@ -75,6 +80,12 @@ public class MyDatePicker extends FrameLayout {
 
     private boolean mIsEnabled = DEFAULT_ENABLED_STATE;
 
+	private boolean mAuxUse;
+
+	private Calendar mAuxCalendar;
+
+	private TextView mAlternateDateText;
+
     /**
      * The callback used to indicate the user changes\d the date.
      */
@@ -89,7 +100,7 @@ public class MyDatePicker extends FrameLayout {
          *            with {@link java.util.Calendar}.
          * @param dayOfMonth The day of the month that was set.
          */
-        void onDateChanged(MyDatePicker view, int year, int monthOfYear, int dayOfMonth);
+        void onDateChanged(MyDatePicker view, Calendar date);
     }
 
     public MyDatePicker(Context context) {
@@ -141,9 +152,9 @@ public class MyDatePicker extends FrameLayout {
                     throw new IllegalArgumentException();
                 }
                 // now set the date to the adjusted one
-                setDate(mTempDate.get(Calendar.YEAR), mTempDate.get(Calendar.MONTH),
-                        mTempDate.get(Calendar.DAY_OF_MONTH));
+                setDate(mTempDate);
                 updateSpinners();
+                updateAuxCalendar();
 //                updateCalendarView();
                 notifyDateChanged();
             }
@@ -205,8 +216,7 @@ public class MyDatePicker extends FrameLayout {
 
         // initialize to current date
         mCurrentDate.setTimeInMillis(System.currentTimeMillis());
-        init(mCurrentDate.get(Calendar.YEAR), mCurrentDate.get(Calendar.MONTH), mCurrentDate
-                .get(Calendar.DAY_OF_MONTH), null);
+        init(mCurrentDate, null);
 
         // re-order the number spinners to match the current date format
         reorderSpinners();
@@ -215,7 +225,18 @@ public class MyDatePicker extends FrameLayout {
 //        if (AccessibilityManager.getInstance(mContext).isEnabled()) {
 //            setContentDescriptions();
 //        }
+        
+        Switch sw = (Switch) findViewById(R.id.switch_calendar);
+        sw.setOnCheckedChangeListener(this);
+        
+        mAlternateDateText = (TextView) findViewById(R.id.alternate_date);
     }
+    
+    
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    	mAlternateDateText.setText(isChecked + "");
+    }
+
 
 //    /**
 //     * Gets the minimal date supported by this {@link DatePicker} in
@@ -417,6 +438,10 @@ public class MyDatePicker extends FrameLayout {
             return newCalendar;
         }
     }
+    
+    private String format(Calendar cal) {
+    	return String.format("%d-%02d-%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONDAY)+1, cal.get(Calendar.DAY_OF_MONTH));
+    }
 
     /**
      * Reorders the spinners according to the date format that is
@@ -457,14 +482,14 @@ public class MyDatePicker extends FrameLayout {
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
-        return new SavedState(superState, getYear(), getMonth(), getDayOfMonth());
+        return new SavedState(superState, getDate());
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
-        setDate(ss.mYear, ss.mMonth, ss.mDay);
+        setDate(ss.mDate);
         updateSpinners();
 //        updateCalendarView();
     }
@@ -473,18 +498,14 @@ public class MyDatePicker extends FrameLayout {
      * Initialize the state. If the provided values designate an inconsistent
      * date the values are normalized before updating the spinners.
      *
-     * @param year The initial year.
-     * @param monthOfYear The initial month <strong>starting from zero</strong>.
-     * @param dayOfMonth The initial day of the month.
+     * @param date The initial date.
      * @param onDateChangedListener How user is notified date is changed by
      *            user, can be null.
      */
-    public void init(int year, int monthOfYear, int dayOfMonth,
-            OnDateChangedListener onDateChangedListener) {
-        setDate(year, monthOfYear, dayOfMonth);
-        updateSpinners();
-//        updateCalendarView();
-        mOnDateChangedListener = onDateChangedListener;
+    public void init(Calendar date, OnDateChangedListener onDateChangedListener) {
+    	setDate(date);
+    	updateSpinners();
+    	mOnDateChangedListener = onDateChangedListener;
     }
 
     /**
@@ -503,8 +524,8 @@ public class MyDatePicker extends FrameLayout {
         }
     }
 
-    private void setDate(int year, int month, int dayOfMonth) {
-        mCurrentDate.set(year, month, dayOfMonth);
+    private void setDate(Calendar date) {
+        mCurrentDate.setTimeInMillis(date.getTimeInMillis());
         if (mCurrentDate.before(mMinDate)) {
             mCurrentDate.setTimeInMillis(mMinDate.getTimeInMillis());
         } else if (mCurrentDate.after(mMaxDate)) {
@@ -556,6 +577,13 @@ public class MyDatePicker extends FrameLayout {
         mMonthSpinner.setValue(mCurrentDate.get(Calendar.MONTH));
         mDaySpinner.setValue(mCurrentDate.get(Calendar.DAY_OF_MONTH));
     }
+    
+    private void updateAuxCalendar() {
+    	if (mAuxUse) {
+    		mAuxCalendar.setTimeInMillis(mCurrentDate.getTimeInMillis());
+    		mAlternateDateText.setText(format(mAuxCalendar));
+    	}
+    }
 
 //    /**
 //     * Updates the calendar view with the current date.
@@ -564,26 +592,6 @@ public class MyDatePicker extends FrameLayout {
 //         mCalendarView.setDate(mCurrentDate.getTimeInMillis(), false, false);
 //    }
 
-    /**
-     * @return The selected year.
-     */
-    public int getYear() {
-        return mCurrentDate.get(Calendar.YEAR);
-    }
-
-    /**
-     * @return The selected month.
-     */
-    public int getMonth() {
-        return mCurrentDate.get(Calendar.MONTH);
-    }
-
-    /**
-     * @return The selected day of month.
-     */
-    public int getDayOfMonth() {
-        return mCurrentDate.get(Calendar.DAY_OF_MONTH);
-    }
 
     /**
      * Notifies the listener, if such, for a change in the selected date.
@@ -591,7 +599,7 @@ public class MyDatePicker extends FrameLayout {
     private void notifyDateChanged() {
         sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
         if (mOnDateChangedListener != null) {
-            mOnDateChangedListener.onDateChanged(this, getYear(), getMonth(), getDayOfMonth());
+            mOnDateChangedListener.onDateChanged(this, getDate());
         }
     }
 
@@ -657,20 +665,14 @@ public class MyDatePicker extends FrameLayout {
      */
     private static class SavedState extends BaseSavedState {
 
-        private final int mYear;
-
-        private final int mMonth;
-
-        private final int mDay;
+    	private Calendar mDate; 
 
         /**
          * Constructor called from {@link DatePicker#onSaveInstanceState()}
          */
-        private SavedState(Parcelable superState, int year, int month, int day) {
+        private SavedState(Parcelable superState, Calendar date) {
             super(superState);
-            mYear = year;
-            mMonth = month;
-            mDay = day;
+            mDate = date;
         }
 
         /**
@@ -678,17 +680,13 @@ public class MyDatePicker extends FrameLayout {
          */
         private SavedState(Parcel in) {
             super(in);
-            mYear = in.readInt();
-            mMonth = in.readInt();
-            mDay = in.readInt();
+            mDate = (Calendar)in.readSerializable();
         }
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
-            dest.writeInt(mYear);
-            dest.writeInt(mMonth);
-            dest.writeInt(mDay);
+            dest.writeSerializable(mDate);
         }
 
         @SuppressWarnings("all")
@@ -704,4 +702,13 @@ public class MyDatePicker extends FrameLayout {
             }
         };
     }
+
+	public Calendar getDate() {
+		return mCurrentDate;
+	}
+
+	public void setAux(boolean useAux, Calendar auxCalendar) {
+		mAuxUse = useAux;
+		mAuxCalendar = auxCalendar;
+	}
 }

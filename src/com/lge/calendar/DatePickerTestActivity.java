@@ -3,21 +3,17 @@ package com.lge.calendar;
 import java.util.Calendar;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
 
 public class DatePickerTestActivity extends Activity {
 	private TextView mDateDisplay;
 	private Button mPickDate;
-	private int mYear;
-	private int mMonth;
-	private int mDay;
-
+	private Calendar mDate;
+	
 	static final int DATE_DIALOG_ID = 0;
 
 	/** Called when the activity is first created. */
@@ -37,10 +33,7 @@ public class DatePickerTestActivity extends Activity {
 		});
 
 		// get the current date
-		final Calendar c = Calendar.getInstance();
-		mYear = c.get(Calendar.YEAR);
-		mMonth = c.get(Calendar.MONTH);
-		mDay = c.get(Calendar.DAY_OF_MONTH);
+		mDate = Calendar.getInstance();
 
 		// display the current date (this method is below)
 		updateDisplay();
@@ -48,20 +41,14 @@ public class DatePickerTestActivity extends Activity {
 
 	// updates the date in the TextView
 	private void updateDisplay() {
-		mDateDisplay.setText(new StringBuilder()
-				// Month is 0 based so add 1
-				.append(mMonth + 1).append("-").append(mDay).append("-")
-				.append(mYear).append(" "));
+		mDateDisplay.setText(android.text.format.DateFormat.getMediumDateFormat(this).format(mDate.getTime()));
 	}
 
 	// the callback received when the user "sets" the date in the dialog
 	private MyDatePickerDialog.OnDateSetListener mDateSetListener = new MyDatePickerDialog.OnDateSetListener() {
 
-		public void onDateSet(MyDatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
-			mYear = year;
-			mMonth = monthOfYear;
-			mDay = dayOfMonth;
+		public void onDateSet(MyDatePicker view, Calendar newDate) {
+			mDate = newDate;
 			updateDisplay();
 		}
 	};
@@ -70,8 +57,7 @@ public class DatePickerTestActivity extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DATE_DIALOG_ID:
-			return new MyDatePickerDialog(this, mDateSetListener, mYear, mMonth,
-					mDay);
+			return new MyDatePickerDialog(this, mDateSetListener, mDate);
 		}
 		return null;
 	}

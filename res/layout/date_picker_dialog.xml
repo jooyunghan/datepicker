@@ -1,39 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+<com.lge.calendar.MyDatePicker xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/datePicker"
+    android:layout_gravity="center_horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:spinnersShown="true"
+    android:calendarViewShown="false"
+    />
 
-        <TextView
-            android:id="@+id/alternate_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Large Text"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <Switch
-            android:id="@+id/switch_calendar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:text="@string/calendar_type"
-            android:textOff="양력"
-            android:textOn="음력" />
-
-    </LinearLayout>
-    
-	<com.lge.calendar.MyDatePicker xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/datePicker"
-	    android:layout_gravity="center_horizontal"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:spinnersShown="true"
-	    android:calendarViewShown="false"
-	    />
-
-</LinearLayout>

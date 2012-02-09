@@ -17,7 +17,7 @@
 package com.lge.calendar;
 
 
-import com.lge.calendar.MyDatePicker.OnDateChangedListener;
+import java.util.Calendar;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,17 +27,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Switch;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
-public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
-        OnDateChangedListener, OnCheckedChangeListener {
+import com.lge.calendar.MyDatePicker.OnDateChangedListener;
 
-    private static final String YEAR = "year";
-    private static final String MONTH = "month";
-    private static final String DAY = "day";
+public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
+        OnDateChangedListener {
+
+    private static final String DATE = "date";
 
     private final MyDatePicker mDatePicker;
     private final OnDateSetListener mCallBack;
@@ -55,7 +53,7 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
          *  with {@link java.util.Calendar}.
          * @param dayOfMonth The day of the month that was set.
          */
-        void onDateSet(MyDatePicker view, int year, int monthOfYear, int dayOfMonth);
+        void onDateSet(MyDatePicker view, Calendar newDate);
     }
 
     /**
@@ -67,26 +65,20 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
      */
     public MyDatePickerDialog(Context context,
             OnDateSetListener callBack,
-            int year,
-            int monthOfYear,
-            int dayOfMonth) {
-        this(context, 0, callBack, year, monthOfYear, dayOfMonth);
+            Calendar date) {
+        this(context, 0, callBack, date);
     }
 
     /**
      * @param context The context the dialog is to run in.
      * @param theme the theme to apply to this dialog
      * @param callBack How the parent is notified that the date is set.
-     * @param year The initial year of the dialog.
-     * @param monthOfYear The initial month of the dialog.
-     * @param dayOfMonth The initial day of the dialog.
+     * @param date The initial date of the dialog.
      */
     public MyDatePickerDialog(Context context,
             int theme,
             OnDateSetListener callBack,
-            int year,
-            int monthOfYear,
-            int dayOfMonth) {
+            Calendar date) {
         super(context, theme);
 
         mCallBack = callBack;
@@ -102,30 +94,19 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
         View view = inflater.inflate(R.layout.date_picker_dialog, null);
         setView(view);
         mDatePicker = (MyDatePicker) view.findViewById(R.id.datePicker);
-        mDatePicker.init(year, monthOfYear, dayOfMonth, this);
-        
-        Switch sw = (Switch) view.findViewById(R.id.switch_calendar);
-        sw.setOnCheckedChangeListener(this);
-        
-        mAlternateDateText = (TextView) view.findViewById(R.id.alternate_date);
+        mDatePicker.init(date, this);
+        mDatePicker.setAux(true, new KoreanCalendar(date.getTime()));
     }
 
     public void onClick(DialogInterface dialog, int which) {
         if (mCallBack != null) {
             mDatePicker.clearFocus();
-            mCallBack.onDateSet(mDatePicker, mDatePicker.getYear(),
-                    mDatePicker.getMonth(), mDatePicker.getDayOfMonth());
+            mCallBack.onDateSet(mDatePicker, mDatePicker.getDate());
         }
     }
 
-    public void onDateChanged(MyDatePicker view, int year,
-            int month, int day) {
-        mDatePicker.init(year, month, day, this);
-        Log.i("TAG", String.format("%d-%d-%d", year, month+1, day));
-    }
-    
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-    	mAlternateDateText.setText(isChecked + "");
+    public void onDateChanged(MyDatePicker view, Calendar date) {
+        Log.i("TAG", android.text.format.DateFormat.getMediumDateFormat(getContext()).format(date.getTime()));
     }
 
     /**
@@ -140,18 +121,13 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
     @Override
     public Bundle onSaveInstanceState() {
         Bundle state = super.onSaveInstanceState();
-        state.putInt(YEAR, mDatePicker.getYear());
-        state.putInt(MONTH, mDatePicker.getMonth());
-        state.putInt(DAY, mDatePicker.getDayOfMonth());
+        state.putSerializable(DATE, mDatePicker.getDate());
         return state;
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        int year = savedInstanceState.getInt(YEAR);
-        int month = savedInstanceState.getInt(MONTH);
-        int day = savedInstanceState.getInt(DAY);
-        mDatePicker.init(year, month, day, this);
+        mDatePicker.init((Calendar)savedInstanceState.getSerializable(DATE), this);
     }
 }
