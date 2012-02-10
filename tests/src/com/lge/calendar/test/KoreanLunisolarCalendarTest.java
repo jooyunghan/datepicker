@@ -1,17 +1,28 @@
 package com.lge.calendar.test;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
-import com.lge.calendar.KoreanLunisolarCalendar;
-
-
 import junit.framework.TestCase;
+
+import com.lge.calendar.KoreanLunisolarCalendar;
 
 public class KoreanLunisolarCalendarTest extends TestCase {
 	private static final int DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
 
+	GregorianCalendar greg(int y, int m, int d) {
+		GregorianCalendar gc = new GregorianCalendar(
+				TimeZone.getTimeZone("GMT+0"));
+		gc.clear();
+		gc.set(y, m, d, 0, 0, 0);
+		return gc;
+	}
 	public void test1970_01_01_gregori_inMillis() {
 		GregorianCalendar gc = new GregorianCalendar(
 				TimeZone.getTimeZone("GMT+0"));
@@ -21,14 +32,12 @@ public class KoreanLunisolarCalendarTest extends TestCase {
 	}
 
 	public void test20120101_fromGregorianCalendar() throws Exception {
-		Calendar c = new KoreanLunisolarCalendar(new GregorianCalendar(2012, 0,
-				23, 0, 0, 0).getTime());
+		Calendar c = new KoreanLunisolarCalendar(greg(2012, 0, 23).getTime());
 		assertDay(2012, 0, 1, c);
 	}
 
 	public void test19700101_fromGregorianCalendar() throws Exception {
-		Calendar c = new KoreanLunisolarCalendar(new GregorianCalendar(1970, 1,
-				6, 0, 0, 0).getTime());
+		Calendar c = new KoreanLunisolarCalendar(greg(1970, 1, 6).getTime());
 		assertDay(1970, 0, 1, c);
 	}
 
@@ -74,8 +83,7 @@ public class KoreanLunisolarCalendarTest extends TestCase {
 	}
 
 	public void testAddDay() {
-		Calendar c = new KoreanLunisolarCalendar(new GregorianCalendar(2012, 0,
-				22, 0, 0, 0).getTime());
+		Calendar c = new KoreanLunisolarCalendar(greg(2012, 0, 22).getTime());
 		assertDay(2011, 11, 29, c);
 
 		c.add(Calendar.DAY_OF_MONTH, 1);
@@ -97,7 +105,9 @@ public class KoreanLunisolarCalendarTest extends TestCase {
 	}
 	
 	public void testGregorianBasis() {
-		Calendar c = new GregorianCalendar(1970, 0, 1, 9, 0, 0);
+		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT+0"));
+		c.clear();
+		c.set(1970, 0, 1, 0, 0, 0);
 		assertEquals(0, c.getTimeInMillis());
 	}
 	
