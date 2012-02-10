@@ -2,7 +2,6 @@ package com.lge.calendar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -11,7 +10,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
@@ -68,10 +66,6 @@ public class MyDatePicker extends FrameLayout {
 
 	private final java.text.DateFormat mDateFormat = new SimpleDateFormat(
 			DATE_FORMAT);
-
-	private String[] mShortMonths;
-
-	private int mNumberOfMonths;
 
 	private Calendar mMinDate;
 

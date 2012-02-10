@@ -16,7 +16,6 @@
 
 package com.lge.calendar;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.app.AlertDialog;

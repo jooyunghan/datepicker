@@ -4,6 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class KoreanLunisolarCalendar extends Calendar {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8177237662194876813L;
+
 	private static final int KOREA_TIME_ZONE = 9 * 60 * 60 * 1000;
 
 	private static final long HOUR_IN_MILLIS = 1000 * 60 * 60;
