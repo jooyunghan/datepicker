@@ -528,17 +528,17 @@ public class MyDatePicker extends FrameLayout {
 		// mMonthSpinner.setWrapSelectorWheel(true);
 		// }
 
-		// String[] monthStrings = DateFormatUtil.getMonthStrings(mCurrentDate);
+		String[] monthStrings = DateFormatUtil.getMonthStrings(mCurrentDate);
 
 		mDaySpinner.setMinValue(1);
 		mDaySpinner.setMaxValue(mCurrentDate
 				.getActualMaximum(Calendar.DAY_OF_MONTH));
 		mDaySpinner.setWrapSelectorWheel(true);
-		// mMonthSpinner.setDisplayedValues(null);
+		mMonthSpinner.setDisplayedValues(null);
 		mMonthSpinner.setMinValue(0);
 		mMonthSpinner
 				.setMaxValue(mCurrentDate.getActualMaximum(Calendar.MONTH));
-		// mMonthSpinner.setDisplayedValues(monthStrings);
+		mMonthSpinner.setDisplayedValues(monthStrings);
 		mMonthSpinner.setWrapSelectorWheel(true);
 
 		// year spinner range does not change based on the current date
