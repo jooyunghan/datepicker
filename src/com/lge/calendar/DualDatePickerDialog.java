@@ -31,14 +31,14 @@ import android.widget.DatePicker;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.lge.calendar.MyDatePicker.OnDateChangedListener;
+import com.lge.calendar.CalendarDatePicker.OnDateChangedListener;
 
-public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
+public class DualDatePickerDialog extends AlertDialog implements OnClickListener,
 		OnDateChangedListener, OnCheckedChangeListener {
 
 	private static final String DATE = "date";
 
-	private final MyDatePicker mDatePicker;
+	private final CalendarDatePicker mDatePicker;
 	private final OnDateSetListener mCallBack;
 	private TextView alternateDateText;
 	private Calendar alternateCalendar;
@@ -59,7 +59,7 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
 		 * @param dayOfMonth
 		 *            The day of the month that was set.
 		 */
-		void onDateSet(MyDatePicker view, Calendar newDate);
+		void onDateSet(CalendarDatePicker view, Calendar newDate);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
 	 * @param dayOfMonth
 	 *            The initial day of the dialog.
 	 */
-	public MyDatePickerDialog(Context context, OnDateSetListener callBack,
+	public DualDatePickerDialog(Context context, OnDateSetListener callBack,
 			Calendar date1, Calendar date2) {
 		this(context, 0, callBack, date1, date2);
 	}
@@ -89,7 +89,7 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
 	 * @param date
 	 *            The initial date of the dialog.
 	 */
-	public MyDatePickerDialog(Context context, int theme,
+	public DualDatePickerDialog(Context context, int theme,
 			OnDateSetListener callBack, Calendar date1, Calendar date2) {
 		super(context, theme);
 
@@ -106,9 +106,9 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
 
 		LayoutInflater inflater = (LayoutInflater) themeContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.date_picker_dialog, null);
+		View view = inflater.inflate(R.layout.dual_date_picker_dialog, null);
 		setView(view);
-		mDatePicker = (MyDatePicker) view.findViewById(R.id.datePicker);
+		mDatePicker = (CalendarDatePicker) view.findViewById(R.id.datePicker);
 		mDatePicker.init(date1, this);
 
 		alternateCalendar = (Calendar) date2.clone();
@@ -127,7 +127,7 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
 		}
 	}
 
-	public void onDateChanged(MyDatePicker view, Calendar date) {
+	public void onDateChanged(CalendarDatePicker view, Calendar date) {
 		syncCalendars(date);
 	}
 
@@ -161,7 +161,7 @@ public class MyDatePickerDialog extends AlertDialog implements OnClickListener,
 	 * 
 	 * @return The calendar view.
 	 */
-	public MyDatePicker getDatePicker() {
+	public CalendarDatePicker getDatePicker() {
 		return mDatePicker;
 	}
 

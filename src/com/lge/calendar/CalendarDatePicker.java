@@ -36,7 +36,7 @@ import android.widget.NumberPicker.OnValueChangeListener;
  * For example, with an instance of KoreanCalendar class 
  * this widget shows the leap month according to the date. 
  */
-public class MyDatePicker extends FrameLayout {
+public class CalendarDatePicker extends FrameLayout {
 
 	private static final String LOG_TAG = DatePicker.class.getSimpleName();
 
@@ -88,18 +88,18 @@ public class MyDatePicker extends FrameLayout {
 		 * @param date
 		 *            The date that was set.
 		 */
-		void onDateChanged(MyDatePicker view, Calendar date);
+		void onDateChanged(CalendarDatePicker view, Calendar date);
 	}
 
-	public MyDatePicker(Context context) {
+	public CalendarDatePicker(Context context) {
 		this(context, null);
 	}
 
-	public MyDatePicker(Context context, AttributeSet attrs) {
+	public CalendarDatePicker(Context context, AttributeSet attrs) {
 		this(context, attrs, android.R.attr.datePickerStyle);
 	}
 
-	public MyDatePicker(Context context, AttributeSet attrs, int defStyle) {
+	public CalendarDatePicker(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
 		String minDate = "01/01/1950";

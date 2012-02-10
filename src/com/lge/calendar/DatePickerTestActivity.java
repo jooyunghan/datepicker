@@ -45,9 +45,9 @@ public class DatePickerTestActivity extends Activity {
 	}
 
 	// the callback received when the user "sets" the date in the dialog
-	private MyDatePickerDialog.OnDateSetListener mDateSetListener = new MyDatePickerDialog.OnDateSetListener() {
+	private DualDatePickerDialog.OnDateSetListener mDateSetListener = new DualDatePickerDialog.OnDateSetListener() {
 
-		public void onDateSet(MyDatePicker view, Calendar newDate) {
+		public void onDateSet(CalendarDatePicker view, Calendar newDate) {
 			mDate = newDate;
 			updateDisplay();
 		}
@@ -57,7 +57,7 @@ public class DatePickerTestActivity extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DATE_DIALOG_ID:
-			return new MyDatePickerDialog(this, mDateSetListener, mDate, new KoreanLunisolarCalendar(mDate.getTime()));
+			return new DualDatePickerDialog(this, mDateSetListener, mDate, new KoreanLunisolarCalendar(mDate.getTime()));
 		}
 		return null;
 	}
