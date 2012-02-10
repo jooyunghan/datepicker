@@ -57,7 +57,7 @@ public class DatePickerTestActivity extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DATE_DIALOG_ID:
-			return new MyDatePickerDialog(this, mDateSetListener, mDate, new ChineseCalendar(mDate.getTime()));
+			return new MyDatePickerDialog(this, mDateSetListener, mDate, new KoreanLunisolarCalendar(mDate.getTime()));
 		}
 		return null;
 	}
