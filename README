@@ -1,0 +1,30 @@
+
+DualDatePickerDialog
+
+can select a date from one of two calendars.
+
+In many countries optional calendar 
+is used together with main calendar. For example in Korea, Gregorian calendar 
+is used mainly but Korean lunisolar calendar is also used for various traditional
+events. 
+
+DualDatePickerDialog lets the caller to select a date from one of two calendars
+by showing them altogether. 
+
+User can switch two calendars using UI elements (which will be changed to improve
+usability).
+
+DualDatePickerDialog uses CalendarDatePicker which is not Android standard DatePicker widget.
+
+
+
+CalendarDatePicker
+
+similar to android's DatePicker widget, but works with Calendar instance.
+
+Android's DatePicker widget works well with GregorianCalendar, but doens't support
+non-Gregorian calendar. CalendarDatePicker works with any Calendar-subclassing instances.
+
+This package provides a KoreanLunisolarCalendar class to support Korean lunisolar calendar.
+
+
