@@ -38,16 +38,16 @@ public class DateFormatUtil {
 	static {
 		leapMonthString[0] = new String[12];
 		for (int i = 0; i < 12; i++) {
-			leapMonthString[0][i] = (i + 1) + "¿ù";
+			leapMonthString[0][i] = (i + 1) + "ì›”";
 		}
 		for (int leapMonth = 1; leapMonth <= 12; leapMonth++) {
 			leapMonthString[leapMonth] = new String[13];
-			leapMonthString[leapMonth][leapMonth] = leapMonth + "¿ù(À±)";
+			leapMonthString[leapMonth][leapMonth] = leapMonth + "ì›”(ìœ¤)";
 			for (int m = 0; m < 12; m++) {
 				if (m + 1 <= leapMonth) {
-					leapMonthString[leapMonth][m] = (m + 1) + "¿ù";
+					leapMonthString[leapMonth][m] = (m + 1) + "ì›”";
 				} else {
-					leapMonthString[leapMonth][m + 1] = (m + 1) + "¿ù";
+					leapMonthString[leapMonth][m + 1] = (m + 1) + "ì›”";
 				}
 			}
 		}
